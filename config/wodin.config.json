@@ -1,5 +1,5 @@
 {
-    "courseTitle": "WODIN Example",
+    "courseTitle": "IDM Short Course 2022",
     "port": 3000,
     "appsPath": "apps",
     "odinAPI": "http://odin.api:8001",
