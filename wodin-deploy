@@ -1,0 +1,161 @@
+#!/usr/bin/env bash
+set -eEuo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
+API_BRANCH="${API_BRANCH:-main}"
+APP_BRANCH="${APP_BRANCH:-main}"
+
+API_NAME=odin.api
+APP_NAME=wodin
+REDIS_NAME=redis
+PROXY_NAME=proxy
+
+API_IMAGE=mrcide/odin.api:$API_BRANCH
+APP_IMAGE=mrcide/wodin:$APP_BRANCH
+REDIS_IMAGE=redis:6
+PROXY_IMAGE=reside/proxy-nginx:master
+
+REDIS_VOLUME=wodin-data
+
+NETWORK=wodin-nw
+
+USAGE="Usage: $0 {up|pull|down|redeploy|configure-proxy}"
+ACTION=
+PROXY_MODE=
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --help)
+            echo $USAGE
+            exit 0
+            ;;
+        -*|--*)
+            echo "Unknown option $1"
+            exit 1
+            ;;
+        *)
+            if [[ $ACTION == "configure-proxy" && -z $PROXY_MODE ]]; then
+                PROXY_MODE=$1
+                shift
+            elif [ ! -z $ACTION ]; then
+                echo "Too many positional arguments"
+                echo $USAGE
+                exit 1
+            else
+                ACTION=$1
+                shift
+            fi
+            ;;
+    esac
+done
+
+function wodin_pull {
+    docker pull $API_IMAGE
+    docker pull $APP_IMAGE
+    docker pull $REDIS_IMAGE
+    docker pull $PROXY_IMAGE
+}
+
+function wodin_down {
+    if [ -f .proxy ]; then
+        docker kill $PROXY_NAME || /bin/true
+    fi
+    docker kill $API_NAME $APP_NAME || /bin/true
+    docker stop $REDIS_NAME || /bin/true
+    docker network rm $NETWORK
+}
+
+function wodin_up {
+    docker volume create $REDIS_VOLUME
+    docker network create $NETWORK 2>/dev/null || /bin/true
+    docker run -d --name $API_NAME --rm --network=$NETWORK $API_IMAGE
+    docker run -d --name $REDIS_NAME --rm --network=$NETWORK \
+           -v $REDIS_VOLUME:/data $REDIS_IMAGE
+    if [ -f .proxy ]; then
+        PROXY_HOST=$(cat .proxy)
+        wodin_up_proxy $PROXY_HOST
+    else
+        wodin_up_no_proxy
+    fi
+}
+
+function wodin_up_proxy {
+    PROXY_HOST=$1
+    docker run -d --name $APP_NAME --rm --network=$NETWORK \
+           -v $PWD/config:/config:ro \
+           $APP_IMAGE /config
+    docker run -d --name $PROXY_NAME --rm --network=$NETWORK \
+           -v $PWD/ssl/certificate.pem:/run/proxy/certificate.pem:ro \
+           -v $PWD/ssl/key.pem:/run/proxy/key.pem:ro \
+           -p 443:443 -p 80:80 \
+           $PROXY_IMAGE wodin:3000 $PROXY_HOST 80 443
+    echo "Wodin now available at https://$PROXY_HOST"
+}
+
+function wodin_up_no_proxy {
+    docker run -d --name $APP_NAME --rm --network=$NETWORK \
+           -v $PWD/config:/config:ro -p 3000:3000 \
+           $APP_IMAGE /config
+    echo "Wodin now available at http://localhost:3000"
+}
+
+function wodin_configure_proxy {
+    case $PROXY_MODE in
+        dev)
+            echo "Using wodin-dev.dide.ic.ac.uk"
+            wodin_ssl dev
+            echo wodin-dev.dide.ic.ac.uk > .proxy
+            ;;
+        epimodels)
+            echo "Using epimodels.dide.ic.ac.uk"
+            wodin_ssl epimodels
+            echo epimodels.dide.ic.ac.uk > .proxy
+            ;;
+        none)
+            echo "Using no proxy"
+            rm -rf ssl
+            rm -f .proxy
+            ;;
+        *)
+            echo "Invald name for configure-proxy"
+            echo "Should be one of dev|epimodels|none"
+            exit 1
+            ;;
+    esac
+}
+
+function wodin_ssl {
+    SSL_NAME=$1
+    export VAULT_ADDR=https://vault.dide.ic.ac.uk:8200
+    echo "Authenticating with the vault"
+    export VAULT_TOKEN=$(vault login -method=github -token-only)
+    echo "Copying keys"
+    mkdir -p ssl/
+    vault read -field=cert "secret/wodin/ssl/$SSL_NAME" > ssl/certificate.pem
+    vault read -field=key "secret/wodin/ssl/$SSL_NAME" > ssl/key.pem && \
+        chmod 600 ssl/key.pem
+}
+
+case "$ACTION" in
+    up)
+        wodin_up
+        ;;
+    configure-proxy)
+        wodin_configure_proxy
+        ;;
+    pull)
+        wodin_pull
+        ;;
+    down)
+        wodin_down
+        ;;
+    redeploy)
+        wodin_pull
+        wodin_down
+        wodin_up
+        ;;
+    *)
+        echo $USAGE
+        exit 1
+esac

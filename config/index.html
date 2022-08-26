@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Introduction to Mathematical Models of the Epidemiology & Control of Infectious Diseases 2022</title>
+    <link rel="stylesheet" href="/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/files/index/index.css"/>
+  </head>
+  <body>
+    <div class="main">
+      <div class="container mt-5">
+        <h1>
+          Introduction to Mathematical Models of the Epidemiology &
+          Control of Infectious Diseases 2022
+        </h1>
+
+        <p>
+        Welcome to the Imperial College London short course
+        "Introduction to Mathematical Models of the Epidemiology and
+        Control of Infectious Diseases"
+        (<a href="http://www.infectiousdiseasemodels.org/">infectiousdiseasemodels.org</a>).
+        </p>
+ 
+        <p>
+          This course will be taught using an interface built using an R
+          package called
+          <code>odin</code> using
+          the <a href="https://www.r-project.org">R programming
+            language</a>, but compiled into JavaScript to run in your
+          browser. Over the 8 day short course you will be using this
+          interface to explore and understand the basics of infectious
+          disease modelling.
+        </p>
+
+        <p>
+          The links below (some links will become active as the course
+          progresses) will take you to the practical and project
+          materials and interface you will use over the next two weeks.
+        </p>
+
+        <h2>Practicals (Week 1 Tuesday - Thursday)</h2>
+        
+        <h3>Tuesday</h3>
+
+        <p>Introduction to R0 and the odin interface</p>
+
+        <div class="show-after" data-after="2022/09/13">
+          <p><a href="apps/introduction">Go to app</a></p>
+        </div>
+
+        <div class="show-after" data-after="2022/09/13 13:00:00">
+          <!-- TODO: make collapsible --> 
+          <p>Solutions</p>
+          <div class="content">
+            <ol>
+              <li><a href="files/index/introduction/exponential.R">
+                  Exponential growth</a></li>
+              <li><a href="files/index/introduction/sir_closed.R">
+                  SIR closed</a></li>
+              <li><a href="files/index/introduction/sir_open.R">
+                  SIR open</a></li>
+              <li><a href="files/index/introduction/sir_open_r0.R">
+                  SIR open with R0</a></li>
+              <li><a href="files/index/introduction/seirs.R">
+                  SEIRS</a></li>
+            </ol>
+          </div>
+        </div>
+
+        <h3>Thursday</h3>
+
+        <p>Estimating key parameters from an outbreak of COVID and influenza</p>
+
+        <div class="show-after" data-after="2022/09/15">
+          <p><a href="apps/flu">Go to app</a></p>
+          <a href="files/index/flu/influenza_data.csv">Influenza data</a>
+        </div>
+
+        <div class="show-after" data-after="2022/09/15 14:30:00">
+          <p>Supporting files</p>
+          <ul>
+            <li><a href="files/index/flu/solution1.R">
+                Pennsylvania, basic </a></li>
+            <li><a href="files/index/flu/solution2.R">
+                Pennsylvania, with school closures </a></li>
+          </ul>
+        </div>
+
+        <!-- not much point in showing these, they're not going to work 
+             <h2>Friday</h2>
+
+        <p>Stochasticity</p>
+
+        <div class="show-after" data-after="2022/09/16">
+          <p>
+            Each exercise is in its own self-contained app, in the list
+            below
+          </p>
+          <ol>
+            <li><a href="stochasticity-1">Deterministic and stochastic growth</a></li>
+            <li><a href="stochasticity-2">Stochastic growth and death</a></li>
+            <li><a href="stochasticity-3">Stochastic SIS model</a></li>
+            <li><a href="stochasticity-4">Stochastic SIR model</a></li>
+          </ol>
+        </div>
+        -->
+
+
+        <h2>Projects (Week 2 Monday - Tuesday)</h2>
+
+        <h3>Ebola</h3>
+
+        <p>Ebola outbreak in Freetown</p>
+
+        <div class="show-after" data-after="2022/09/20">
+
+          <p><a href="apps/ebola">Go to app</a></p>
+
+          <p>Supporting files</p>
+
+          <ul>
+            <li><a href="files/index/ebola/flowcharts.pdf">flowcharts</a>,
+              describing the models that should be written</li>
+            <li><a href="files/index/ebola/data.csv">input data</a>
+          </ul>
+        </div>
+
+        <div class="show-after" data-after="2022/09/22 13:30:00">
+          <!-- TODO: make collapsible -->
+          <p>Solutions (click to expand)</p>
+          <div class="content">
+            <ul>
+              <li><a href="files/index/ebola/model1.R"><code>model1.R</code></a></li>
+              <li><a href="files/index/ebola/model1_fitted.R"><code>model1_fitted.R</code></a></li>
+              <li><a href="files/index/ebola/model2.R"><code>model2.R</code></a></li>
+              <li><a href="files/index/ebola/model2_fitted.R"><code>model2_fitted.R</code></a></li>
+              <li><a href="files/index/ebola/model3.R"><code>model3.R</code></a></li>
+              <li><a href="files/index/ebola/model3_fitted.R"><code>model3_fitted.R</code></a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- these need some additional features
+        <h3>Vector-borne diseases</h3>
+
+        <p>Case-studies in malaria and onchocerciasis</p>
+
+        <div class="show-after" data-after="2022/09/20">
+          <ul>
+            <li><a href="vbd-malaria">Malaria</a></li>
+            <li><a href="vbd-oncho1">Onchocerciasis part 1</a></li>
+            <li><a href="vbd-oncho2">Onchocerciasis part 2</a></li>
+          </ul>
+        </div>
+
+        <div class="show-after" data-after="2022/09/22 13:30:00">
+          <button class="collapsible">Solutions (click to expand)</button>
+          <div class="content">
+            <ul>
+              <li><a href="files/index/malaria/solution1.R">Malaria <code>solution1.R</code></a></li>
+              <li><a href="files/index/malaria/solution2.R">Malaria <code>solution2.R</code></a></li>
+              <li><a href="files/index/malaria/solution3.R">Malaria <code>solution3.R</code></a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="show-after" data-after="2022/09/15 15:30:00">
+          <button class="collapsible">Solutions (click to expand)</button>
+          <div class="content">
+            <ul>
+              <li><a href="files/index/oncho/solution1.R">Oncho <code>solution1.R</code></a></li>
+            </ul>
+          </div>
+        </div> 
+        -->
+
+        <h3>HIV</h3>
+
+        <p>HIV transmission in a developing country context</p>
+
+        <div class="show-after" data-after="2022/09/20">
+          <p><a href="apps/hiv">Go to app</a></p>
+        </div>
+
+        <div class="show-after" data-after="2022/09/22 13:30:00">
+          <p>Solutions</p>
+          <div class="content">
+            <ul>
+              <li><a href="files/index/hiv/task3.R"><code>task3.R</code></a></li>
+              <li><a href="files/index/hiv/task7.R"><code>task7.R</code></a></li>
+              <li><a href="files/index/hiv/task10.R"><code>task10.R</code></a></li>
+              <li><a href="files/index/hiv/task13.R"><code>task13.R</code></a></li>
+              <li><a href="files/index/hiv/task14.R"><code>task14.R</code></a></li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>Help</h2>
+
+        <p>
+          A general help file for writing model (<code>odin</code>) code
+          and navigating the interface can be
+          found <a href="https://mrc-ide.github.io/infectiousdiseasemodels-2022/guide/">here</a>.
+        </p>
+
+        <p>
+          For transitioning from this interface into R and Rstudio we
+          have <a href="https://mrc-ide.github.io/infectiousdiseasemodels-2022/transition/">compiled a list of useful resources and a
+            simple example</a> to start the transition
+        </p>
+        
+      </div>
+    </div>
+  </body>
+</html>
